@@ -1,228 +1,217 @@
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { Gamepad2, ChevronRight, Users, Disc } from 'lucide-react';
+import { Users, Trophy, Zap, ChevronRight, BarChart3, ShieldCheck, Heart, ArrowUpRight, Gamepad2 } from 'lucide-react';
 
-const GAMES = [
+// 1. ДАНІ ПРО ІГРИ (Ті самі, що і в Games.tsx)
+const PREVIEW_GAMES = [
   {
-    title: "Project: Aether",
-    genre: "Open World RPG",
-    status: "Beta",
-    desc: "An immersive fantasy world with complex combat systems and deep lore. Experience Roblox like never before.",
-    image: "/game1.jpg"
+    title: "One of Us",
+    genre: "Sports / Physics",
+    status: "LIVE",
+    statusStyle: "bg-white text-black font-bold border border-white",
+    desc: "One player is secretly the Killer. Blend in or strike when no one expects it.",
+    image: "/images/one-of-us.png", 
+    link: "https://www.roblox.com/games/79436299646095/One-of-Us#!/about" 
   },
   {
-    title: "Neon Rivals",
-    genre: "Competitive Shooter",
-    status: "In Development",
-    desc: "Fast-paced, high-fidelity arena shooter focusing on e-sports mechanics and smooth movement.",
-    image: "/game2.jpg"
+    title: "Jujutsu Cursed Genesis",
+    genre: "Sports / Competitive",
+    status: "IN DEV",
+    statusStyle: "bg-black/40 backdrop-blur-md border border-white/20 text-white font-medium",
+    desc: "Fast-paced combat with exaggerated physics. Dominate the arena in this high-fidelity experience.",
+    image: "/images/jcg.png", 
+    link: "#"
+  },
+  {
+    title: "GreyBox",
+    genre: "FPS / Strategy",
+    status: "IN DEV",
+    statusStyle: "bg-black/40 backdrop-blur-md border border-white/20 text-white font-medium",
+    desc: "An upcoming tactical shooter pushing the boundaries of what's possible on the Roblox engine.",
+    image: "/images/greybox.png", 
+    link: "#"
   }
-];
-
-const FEATURES = [
-  { title: "Advanced Combat", desc: "Proprietary hit-detection and animation blending systems for fluid PvP encounters." },
-  { title: "Visual Fidelity", desc: "Pushing the Roblox engine to its limits with custom VFX, lighting, and environmental design." },
-  { title: "Scalable Architecture", desc: "Robust backend infrastructure ensuring lag-free gameplay for thousands of concurrent users." }
 ];
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-[#020617] text-slate-300 font-sans selection:bg-lumen-500 selection:text-white">
+    <div className="overflow-hidden bg-mono-950 text-white selection:bg-white selection:text-black">
       
-      {/* --- HERO SECTION --- */}
-      <section className="relative min-h-screen flex items-center justify-center pt-20 overflow-hidden">
-        {/* ABSTRACT BACKGROUND */}
-        <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2072&auto=format&fit=crop')] bg-cover bg-center opacity-10" />
-        <div className="absolute inset-0 bg-gradient-to-b from-[#020617]/0 via-[#020617]/80 to-[#020617]" />
+      {/* 1. HERO SECTION */}
+      <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden">
+        <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1511512578047-dfb367046420?q=80&w=2071')] bg-cover bg-center opacity-10 mix-blend-luminosity" />
+        <div className="absolute inset-0 bg-gradient-to-b from-mono-950/10 via-mono-950/80 to-mono-950" />
         
         <div className="relative max-w-7xl mx-auto px-4 text-center z-10">
-          <motion.div 
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.8 }}
-          >
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-slate-800/50 border border-slate-700 backdrop-blur-md mb-8">
-              <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-              <span className="text-xs font-semibold tracking-wide uppercase text-slate-300">Accepting Commissions & Partnerships</span>
-            </div>
-            
-            <h1 className="text-6xl md:text-8xl font-bold text-white tracking-tight leading-tight mb-8">
-              Forging Worlds <br />
-              <span className="bg-gradient-to-r from-lumen-400 via-lumen-500 to-accent-purple bg-clip-text text-transparent">
-                Beyond Boundaries
-              </span>
+          <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>
+            <h1 className="text-6xl md:text-8xl font-black text-white mb-6 tracking-tighter">
+              DESIGN WITH <br />
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-500">A TWIST</span>
             </h1>
-            
-            <p className="text-xl md:text-2xl text-slate-400 max-w-3xl mx-auto mb-12 leading-relaxed">
-              Lumenara is a premier Roblox development studio. We fuse cinematic visuals, complex systems, and immersive storytelling to create the next generation of experiences.
+            <p className="text-xl md:text-2xl text-mono-400 max-w-2xl mx-auto mb-10">
+              Forging immersive Roblox experiences that captivate players and amplify brands.
             </p>
-            
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link to="/games" className="group flex items-center justify-center gap-3 bg-lumen-600 hover:bg-lumen-500 text-white px-8 py-4 rounded-full font-bold text-lg transition-all shadow-[0_0_20px_rgba(14,165,233,0.3)] hover:shadow-[0_0_30px_rgba(14,165,233,0.5)]">
-                Play Our Games 
-                <Gamepad2 className="w-5 h-5 group-hover:rotate-12 transition-transform" />
+            <div className="flex flex-col sm:flex-row justify-center gap-4">
+              <Link to="/games" className="bg-white hover:bg-mono-200 text-mono-950 px-8 py-4 rounded-full font-bold text-lg transition-all shadow-lg hover:shadow-white/25">
+                Play Now
               </Link>
-              <a href="#about" className="flex items-center justify-center gap-3 bg-slate-800 hover:bg-slate-700 text-white px-8 py-4 rounded-full font-bold text-lg border border-slate-700 transition-all">
-                Studio Vision
-              </a>
+              <Link to="/contact" className="bg-mono-900 hover:bg-mono-800 text-white px-8 py-4 rounded-full font-bold text-lg border border-mono-800 transition-all">
+                Partner With Us
+              </Link>
             </div>
           </motion.div>
         </div>
       </section>
 
-      {/* --- ABOUT / METRICS --- */}
-      <section id="about" className="py-24 bg-slate-900/30 border-y border-slate-800/50">
+      {/* 2. STUDIO METRICS */}
+      <section className="py-12 border-y border-mono-800 bg-mono-900/50 backdrop-blur-sm">
+        <div className="max-w-7xl mx-auto px-4 grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+          {[
+            { label: "Total Visits", val: "500M+", icon: <Users className="w-5 h-5 text-white" /> },
+            { label: "Peak Players", val: "125K", icon: <Zap className="w-5 h-5 text-mono-300" /> },
+            { label: "Avg Rating", val: "94%", icon: <Trophy className="w-5 h-5 text-mono-300" /> },
+            { label: "Community", val: "2M+", icon: <Heart className="w-5 h-5 text-white" /> },
+          ].map((stat, idx) => (
+            <div key={idx} className="flex flex-col items-center">
+              <div className="flex items-center gap-2 mb-2 opacity-70">
+                {stat.icon}
+                <span className="text-sm font-bold uppercase tracking-widest text-mono-400">{stat.label}</span>
+              </div>
+              <span className="text-4xl md:text-5xl font-black text-white">{stat.val}</span>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* 3. FEATURED GAME (Hero Product) */}
+      <section className="py-24 relative">
         <div className="max-w-7xl mx-auto px-4">
-          <div className="grid md:grid-cols-2 gap-16 items-center">
-            <div>
-              <h3 className="text-lumen-400 font-bold tracking-wider uppercase mb-4">Who We Are</h3>
-              <h2 className="text-4xl font-bold text-white mb-6">Not Just Builders. <br />We Are Architects of Fun.</h2>
-              <p className="text-lg text-slate-400 mb-6 leading-relaxed">
-                Founded with a mission to elevate the Roblox platform, Lumenara bridges the gap between casual UGC and professional game development. We don't just ship games; we build communities and lasting digital experiences.
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            <div className="order-2 lg:order-1">
+              <span className="text-white font-bold tracking-widest uppercase mb-2 block">Featured Project</span>
+              <h2 className="text-5xl font-bold text-white mb-6">One of Us</h2>
+              <p className="text-mono-400 text-lg mb-8 leading-relaxed">
+                One player is secretly the Killer, able to transform between human and monster form at will. Blend in with the group — or strike when no one expects it.
               </p>
-              <ul className="space-y-4">
-                {['Player-First Philosophy', 'High-Fidelity Animation', 'Long-Term Support'].map((item) => (
-                  <li key={item} className="flex items-center gap-3 text-slate-300">
-                    <div className="bg-lumen-500/20 p-1 rounded-full"><ChevronRight className="w-4 h-4 text-lumen-400" /></div>
-                    {item}
+              <ul className="space-y-4 mb-8">
+                {['Social Deduction', 'Unique Abilities', 'High Fidelity Maps'].map(item => (
+                  <li key={item} className="flex items-center gap-3 text-mono-300">
+                    <div className="w-2 h-2 bg-white rounded-full" /> {item}
                   </li>
                 ))}
               </ul>
+              <a href="https://www.roblox.com/games/79436299646095/One-of-Us#!/about" target="_blank" rel="noreferrer" className="flex items-center gap-2 bg-white text-mono-950 px-8 py-3 rounded-lg font-bold hover:bg-mono-200 transition-colors w-fit">
+                <Gamepad2 className="w-5 h-5" /> Play Now on Roblox
+              </a>
             </div>
-            <div className="grid grid-cols-2 gap-4">
-              {[
-                { label: 'Visits', val: '50M+' },
-                { label: 'Community', val: '120k+' },
-                { label: 'Team Members', val: '15' },
-                { label: 'Projects', val: '4' }
-              ].map((stat) => (
-                <div key={stat.label} className="bg-slate-900 border border-slate-800 p-8 rounded-2xl text-center hover:border-lumen-500/30 transition-colors shadow-lg shadow-slate-950/50">
-                  <div className="text-4xl font-bold text-white mb-2">{stat.val}</div>
-                  <div className="text-sm text-slate-500 font-medium uppercase">{stat.label}</div>
-                </div>
-              ))}
+            <div className="order-1 lg:order-2 relative group">
+              <div className="absolute inset-0 bg-white/10 blur-3xl -z-10 rounded-full opacity-50 group-hover:opacity-70 transition-opacity" />
+              <img 
+                src="/images/one-of-us.png" 
+                alt="One of Us" 
+                className="rounded-2xl border border-mono-700 shadow-2xl rotate-2 hover:rotate-0 transition-transform duration-500 grayscale hover:grayscale-0"
+              />
             </div>
           </div>
         </div>
       </section>
 
-      {/* --- GAMES SECTION --- */}
-      <section id="games" className="py-32 relative">
-        <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-lumen-900/20 via-[#020617] to-[#020617] -z-10" />
-        <div className="text-center mb-16 px-4">
-          <motion.span 
-            initial={{ opacity: 0, y: 10 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-lumen-400 font-semibold tracking-wider uppercase text-sm"
-          >
-            Explore The Universe
-          </motion.span>
-          <motion.h2 
-            initial={{ opacity: 0, y: 10 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-            viewport={{ once: true }}
-            className="text-3xl md:text-5xl font-bold mt-2 text-white"
-          >
-            Our Flagship Projects
-          </motion.h2>
-        </div>
-        
-        <div className="max-w-7xl mx-auto px-4 grid md:grid-cols-2 gap-8">
-          {GAMES.map((game, idx) => (
-            <motion.div 
-              key={idx}
-              whileHover={{ y: -10 }}
-              className="group relative rounded-3xl overflow-hidden bg-slate-900 border border-slate-800 shadow-xl shadow-slate-950/50"
-            >
-              {/* SECTION IMAGE */}
-              <div className="h-64 w-full overflow-hidden relative">
-                <div className="absolute inset-0 bg-slate-900/40 z-10 group-hover:bg-transparent transition-colors duration-500" />
-                <img 
-                  src={game.image} 
-                  alt={game.title} 
-                  className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700 ease-out" 
-                />
-              </div>
-              
-              <div className="absolute inset-0 p-8 flex flex-col justify-end bg-gradient-to-t from-slate-950 via-slate-950/80 to-transparent z-20 pointer-events-none">
-                <div className="flex items-center justify-between mb-4 pointer-events-auto">
-                  <span className={`px-3 py-1 rounded-full text-xs font-bold bg-white/10 border border-white/10 text-white backdrop-blur-sm`}>
-                    {game.status}
-                  </span>
-                  <span className="text-slate-300 text-sm font-medium drop-shadow-md">{game.genre}</span>
-                </div>
-                <h3 className="text-3xl font-bold text-white mb-2 drop-shadow-lg">{game.title}</h3>
-                <p className="text-slate-200 mb-6 max-w-md drop-shadow-md">{game.desc}</p>
-                <button className="w-fit flex items-center gap-2 text-white font-bold hover:text-lumen-400 transition-colors pointer-events-auto">
-                  View Project Details <ChevronRight className="w-4 h-4" />
-                </button>
-              </div>
-            </motion.div>
-          ))}
-        </div>
-      </section>
-
-      {/* --- CAPABILITIES --- */}
-      <section id="features" className="py-24 bg-slate-950">
-        <div className="text-center mb-16 px-4">
-          <span className="text-lumen-400 font-semibold tracking-wider uppercase text-sm">Under The Hood</span>
-          <h2 className="text-3xl md:text-5xl font-bold mt-2 text-white">Studio Capabilities</h2>
-        </div>
-        <div className="max-w-7xl mx-auto px-4 grid md:grid-cols-3 gap-6">
-          {FEATURES.map((feat, idx) => (
-            <div key={idx} className="bg-slate-900/50 p-8 rounded-2xl border border-slate-800 hover:bg-slate-900 hover:border-lumen-500/50 transition-all group shadow-lg shadow-slate-950/30">
-              <h4 className="text-xl font-bold text-white mb-3">{feat.title}</h4>
-              <p className="text-slate-400 leading-relaxed">{feat.desc}</p>
+      {/* 4. GAME LIBRARY PREVIEW (UPDATED SECTION) */}
+      <section className="py-24 bg-mono-950 border-t border-mono-900">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="flex justify-between items-end mb-12">
+            <div>
+              <h2 className="text-3xl font-bold text-white mb-2">More from Lumenara</h2>
+              <p className="text-mono-400">Pushing the boundaries of what's possible.</p>
             </div>
-          ))}
-        </div>
-      </section>
-
-      {/* --- CAREERS & COMMUNITY (Split) --- */}
-      <section id="careers" className="py-24">
-        <div className="max-w-7xl mx-auto px-4 grid lg:grid-cols-2 gap-12">
-          
-          {/* Careers Box */}
-          <div className="bg-gradient-to-br from-slate-900 to-slate-950 p-10 rounded-3xl border border-slate-800 relative overflow-hidden shadow-xl shadow-slate-950/50">
-            <div className="absolute top-0 right-0 p-8 opacity-10"><Users className="w-32 h-32" /></div>
-            <h3 className="text-3xl font-bold text-white mb-4">Join the Vanguard</h3>
-            <p className="text-slate-400 mb-8 max-w-md">
-              We are always looking for talented Scripters, 3D Modelers, and VFX Artists to push the boundaries of Roblox.
-            </p>
-            <div className="space-y-4 mb-8">
-              <div className="flex justify-between items-center py-3 border-b border-slate-800">
-                <span className="text-slate-200 font-medium">Senior Lua Scripter</span>
-                <span className="text-xs bg-lumen-900 text-lumen-200 px-2 py-1 rounded">Remote</span>
-              </div>
-              <div className="flex justify-between items-center py-3 border-b border-slate-800">
-                <span className="text-slate-200 font-medium">3D Environment Artist</span>
-                <span className="text-xs bg-lumen-900 text-lumen-200 px-2 py-1 rounded">Remote</span>
-              </div>
-            </div>
-            <Link to="/careers" className="bg-white text-slate-950 px-6 py-3 rounded-full font-bold hover:bg-lumen-400 transition-colors w-full sm:w-auto inline-block text-center">
-              View All Positions
+            <Link to="/games" className="text-white font-bold hover:text-mono-300 transition-colors flex items-center gap-1">
+              View All Games <ChevronRight className="w-4 h-4" />
             </Link>
           </div>
+          
+          <div className="grid md:grid-cols-3 gap-6">
+            {PREVIEW_GAMES.map((game, idx) => (
+              <motion.a 
+                key={idx}
+                href={game.link}
+                target="_blank"
+                rel="noreferrer"
+                whileHover={{ y: -5 }}
+                className="group relative bg-mono-900 rounded-xl overflow-hidden border border-mono-800 hover:border-white transition-colors duration-500 block"
+              >
+                {/* Image Section */}
+                <div className="h-56 bg-mono-800 relative overflow-hidden">
+                   {/* Status Badge */}
+                   <div className="absolute top-4 left-4 z-30">
+                    <span className={`px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider shadow-lg ${game.statusStyle}`}>
+                      {game.status}
+                    </span>
+                  </div>
 
-          {/* Community Box */}
-          <div className="bg-lumen-600 p-10 rounded-3xl relative overflow-hidden flex flex-col justify-center text-center items-center shadow-[0_0_40px_rgba(14,165,233,0.3)]">
-            <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10" />
-            <div className="relative z-10">
-              <Disc className="w-16 h-16 text-white mx-auto mb-6" />
-              <h3 className="text-3xl font-bold text-white mb-4">Join Our Discord</h3>
-              <p className="text-lumen-100 mb-8 max-w-md">
-                Get exclusive sneak peeks, participate in beta testing, and chat with the developers. Our community is waiting for you.
-              </p>
-              <button className="bg-white text-lumen-700 px-8 py-4 rounded-full font-bold hover:bg-slate-100 transition-colors shadow-lg">
-                Join Server
-              </button>
-            </div>
+                  <img 
+                    src={game.image} 
+                    alt={game.title}
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 grayscale group-hover:grayscale-0" 
+                  />
+                  
+                  {/* Overlays for readability */}
+                  <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors z-10" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-transparent opacity-90 z-20" />
+                </div>
+
+                {/* Content Section */}
+                <div className="p-6 relative z-30 -mt-12"> 
+                  {/* Title sits on top of the image gradient area */}
+                  <h3 className="text-xl font-bold text-white mb-2 drop-shadow-lg group-hover:underline decoration-2 underline-offset-4">
+                    {game.title}
+                  </h3>
+                  <p className="text-mono-300 text-xs leading-relaxed line-clamp-3">
+                    {game.desc}
+                  </p>
+                  
+                  <div className="mt-4 flex items-center gap-2 text-white text-xs font-bold uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity transform translate-y-2 group-hover:translate-y-0">
+                    View Project <ArrowUpRight className="w-3 h-3" />
+                  </div>
+                </div>
+              </motion.a>
+            ))}
           </div>
-
         </div>
       </section>
+
+      {/* 5. OUR STORY */}
+      <section className="py-24 border-t border-mono-900">
+        <div className="max-w-4xl mx-auto px-4 text-center">
+          <h2 className="text-4xl font-bold text-white mb-8">Crafting Digital Worlds</h2>
+          <p className="text-xl text-mono-300 leading-relaxed mb-6">
+            Lumenara isn't just a game studio; we are a collective of dreamers and engineers dedicated to the Roblox platform. 
+            Our mission is to bridge the gap between casual play and professional game design.
+          </p>
+          <Link to="/team" className="text-white border-b border-white pb-1 hover:text-mono-300 transition-colors">Meet the Team</Link>
+        </div>
+      </section>
+
+      {/* 6. CAPABILITIES */}
+      <section className="py-24 bg-mono-900/30">
+        <div className="max-w-7xl mx-auto px-4 grid md:grid-cols-3 gap-8">
+          <div className="p-8 bg-mono-950 rounded-2xl border border-mono-800">
+            <BarChart3 className="w-10 h-10 text-white mb-6" />
+            <h3 className="text-xl font-bold text-white mb-3">Amplify your Brand</h3>
+            <p className="text-mono-400">We turn brand values into playable moments, creating deep engagement rather than just impressions.</p>
+          </div>
+          <div className="p-8 bg-mono-950 rounded-2xl border border-mono-800">
+            <ShieldCheck className="w-10 h-10 text-white mb-6" />
+            <h3 className="text-xl font-bold text-white mb-3">Quality: Assured</h3>
+            <p className="text-mono-400">Rigorous testing and professional pipelines ensure our games are polished, performant, and bug-free.</p>
+          </div>
+          <div className="p-8 bg-mono-950 rounded-2xl border border-mono-800">
+            <Users className="w-10 h-10 text-white mb-6" />
+            <h3 className="text-xl font-bold text-white mb-3">People, not Robots</h3>
+            <p className="text-mono-400">We believe in craftsmanship. Every asset, script, and UI element is handmade with passion and intent.</p>
+          </div>
+        </div>
+      </section>
+
     </div>
   );
 }

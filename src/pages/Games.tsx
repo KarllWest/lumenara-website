@@ -1,64 +1,98 @@
+import { useEffect, useState } from 'react'; // Додали хуки
 import { motion } from 'framer-motion';
-
-const GAMES = [
-  {
-    title: "Project: Aether",
-    genre: "Open World RPG",
-    status: "Beta",
-    desc: "An immersive fantasy world with complex combat systems and deep lore.",
-    image: "/game1.jpg" 
-  },
-  {
-    title: "Neon Rivals",
-    genre: "Competitive Shooter",
-    status: "In Development",
-    desc: "Fast-paced, high-fidelity arena shooter focusing on e-sports mechanics.",
-    image: "/game2.jpg" 
-  },
-  // Можна додати третю гру для прикладу
-  {
-    title: "Void Runners",
-    genre: "Obby / Speedrun",
-    status: "Concept",
-    desc: "A gravity-defying parkour experience set in deep space.",
-    image: "https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&q=80&w=1000" 
-  }
-];
+import { ArrowUpRight } from 'lucide-react';
+import { supabase } from '../lib/supabase'; 
 
 export default function Games() {
+  const [games, setGames] = useState<any[]>([]); // Стан для ігор
+  const [loading, setLoading] = useState(true);
+
+  // ЗАВАНТАЖЕННЯ ДАНИХ
+  useEffect(() => {
+    async function loadGames() {
+      const { data } = await supabase.from('games').select('*').order('id', { ascending: true });
+      if (data) setGames(data);
+      setLoading(false);
+    }
+    loadGames();
+  }, []);
+
+  if (loading) return <div className="min-h-screen bg-mono-950 pt-40 text-center text-white">Loading library...</div>;
+
   return (
-    <div className="pb-20">
-      {/* Header */}
-      <div className="pt-32 pb-16 px-4 text-center bg-gradient-to-b from-slate-900/50 to-[#020617]">
-        <h1 className="text-5xl font-bold text-white mb-4">Our Projects</h1>
-        <p className="text-slate-400 text-xl max-w-2xl mx-auto">Explore the universes we are building on Roblox.</p>
+    <div className="min-h-screen pb-20 bg-mono-950 text-white selection:bg-white selection:text-black">
+      
+      {/* HEADER SECTION */}
+      <div className="pt-40 pb-20 px-4 text-center">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+        >
+          <h1 className="text-6xl md:text-8xl font-black mb-6 tracking-tighter uppercase">
+            Our Games
+          </h1>
+          <p className="text-mono-400 text-xl max-w-2xl mx-auto leading-relaxed">
+            We build immersive, physics-based experiences played by millions.
+            <br />Explore the library below.
+          </p>
+        </motion.div>
       </div>
 
-      {/* Grid */}
-      <div className="max-w-7xl mx-auto px-4 grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {GAMES.map((game, idx) => (
-          <motion.div 
-            key={idx}
-            initial={{ opacity: 0, y: 20 }}
+      {/* GAMES GRID */}
+      <div className="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-2 gap-8">
+        {games.map((game, idx) => (
+          <motion.a 
+            href={game.link}
+            target="_blank"
+            rel="noreferrer"
+            key={idx} // Тут краще використовувати game.id
+            initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
             transition={{ delay: idx * 0.1 }}
-            className="group rounded-2xl overflow-hidden bg-slate-900 border border-slate-800 hover:border-lumen-500/50 transition-all"
+            className="group relative block bg-mono-900 rounded-3xl overflow-hidden border border-mono-800 hover:border-white transition-all duration-500 shadow-xl hover:shadow-2xl"
           >
-            <div className="h-56 overflow-hidden relative">
-              <div className="absolute inset-0 bg-slate-900/20 group-hover:bg-transparent z-10 transition-colors" />
-              <img src={game.image} alt={game.title} className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700" />
-            </div>
-            <div className="p-6">
-              <div className="flex justify-between items-start mb-4">
-                <h3 className="text-2xl font-bold text-white">{game.title}</h3>
-                <span className="bg-slate-800 text-xs px-2 py-1 rounded border border-slate-700 text-lumen-300">{game.status}</span>
+            {/* IMAGE CONTAINER */}
+            <div className="h-[450px] overflow-hidden relative">
+              <div className="absolute top-6 left-6 z-30">
+                <span className={`px-4 py-2 rounded-full text-xs font-bold tracking-widest uppercase shadow-lg ${game.statusStyle}`}>
+                  {game.status}
+                </span>
               </div>
-              <p className="text-slate-400 mb-6">{game.desc}</p>
-              <button className="w-full py-3 rounded-lg bg-slate-800 hover:bg-lumen-600 text-white font-bold transition-colors">
-                Play on Roblox
-              </button>
+
+              <img 
+                src={game.image} 
+                alt={game.title} 
+                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 grayscale group-hover:grayscale-0" 
+              />
+              
+              <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors duration-500 z-10" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black via-black/80 to-transparent opacity-90 z-20" />
             </div>
-          </motion.div>
+
+            {/* TEXT CONTENT */}
+            <div className="absolute bottom-0 left-0 w-full p-8 md:p-10 z-30">
+              <div className="flex justify-between items-end mb-4">
+                <div>
+                  <span className="text-mono-300 text-sm font-bold tracking-widest uppercase block mb-2 drop-shadow-md">
+                    {game.genre}
+                  </span>
+                  <h3 className="text-4xl font-black text-white group-hover:underline decoration-2 underline-offset-8 drop-shadow-xl">
+                    {game.title}
+                  </h3>
+                </div>
+                
+                <div className="bg-white text-black p-3 rounded-full opacity-0 transform translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300 shadow-lg">
+                  <ArrowUpRight className="w-6 h-6" />
+                </div>
+              </div>
+              
+              <p className="text-mono-200 text-lg leading-relaxed max-w-xl drop-shadow-md font-medium">
+                {game.desc}
+              </p>
+            </div>
+          </motion.a>
         ))}
       </div>
     </div>
