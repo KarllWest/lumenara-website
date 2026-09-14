@@ -1,27 +1,15 @@
-import { useEffect, useState } from 'react'; // Додали хуки
 import { motion } from 'framer-motion';
 import { ArrowUpRight } from 'lucide-react';
-import { supabase } from '../lib/supabase'; 
+import { useSupabaseList } from '../hooks/useSupabaseList';
+import ContentState from '../components/ContentState';
+import { statusStyleFor, type Game } from '../types/content';
 
 export default function Games() {
-  const [games, setGames] = useState<any[]>([]); // Стан для ігор
-  const [loading, setLoading] = useState(true);
-
-  // ЗАВАНТАЖЕННЯ ДАНИХ
-  useEffect(() => {
-    async function loadGames() {
-      const { data } = await supabase.from('games').select('*').order('id', { ascending: true });
-      if (data) setGames(data);
-      setLoading(false);
-    }
-    loadGames();
-  }, []);
-
-  if (loading) return <div className="min-h-screen bg-mono-950 pt-40 text-center text-white">Loading library...</div>;
+  const { data: games, loading, error } = useSupabaseList<Game>('games');
 
   return (
     <div className="min-h-screen pb-20 bg-mono-950 text-white selection:bg-white selection:text-black">
-      
+
       {/* HEADER SECTION */}
       <div className="pt-40 pb-20 px-4 text-center">
         <motion.div
@@ -39,61 +27,77 @@ export default function Games() {
         </motion.div>
       </div>
 
+      <ContentState
+        loading={loading}
+        error={error}
+        isEmpty={games.length === 0}
+        emptyText="No games published yet. Check back soon."
+      />
+
       {/* GAMES GRID */}
       <div className="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-2 gap-8">
-        {games.map((game, idx) => (
-          <motion.a 
-            href={game.link}
-            target="_blank"
-            rel="noreferrer"
-            key={idx} // Тут краще використовувати game.id
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: idx * 0.1 }}
-            className="group relative block bg-mono-900 rounded-3xl overflow-hidden border border-mono-800 hover:border-white transition-all duration-500 shadow-xl hover:shadow-2xl"
-          >
-            {/* IMAGE CONTAINER */}
-            <div className="h-[450px] overflow-hidden relative">
-              <div className="absolute top-6 left-6 z-30">
-                <span className={`px-4 py-2 rounded-full text-xs font-bold tracking-widest uppercase shadow-lg ${game.statusStyle}`}>
-                  {game.status}
-                </span>
-              </div>
+        {games.map((game, idx) => {
+          const isPlayable = Boolean(game.link) && game.link !== '#';
 
-              <img 
-                src={game.image} 
-                alt={game.title} 
-                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 grayscale group-hover:grayscale-0" 
-              />
-              
-              <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors duration-500 z-10" />
-              <div className="absolute inset-0 bg-gradient-to-t from-black via-black/80 to-transparent opacity-90 z-20" />
-            </div>
-
-            {/* TEXT CONTENT */}
-            <div className="absolute bottom-0 left-0 w-full p-8 md:p-10 z-30">
-              <div className="flex justify-between items-end mb-4">
-                <div>
-                  <span className="text-mono-300 text-sm font-bold tracking-widest uppercase block mb-2 drop-shadow-md">
-                    {game.genre}
+          return (
+            <motion.a
+              href={isPlayable ? game.link : undefined}
+              target={isPlayable ? '_blank' : undefined}
+              rel="noreferrer"
+              key={game.id}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: idx * 0.1 }}
+              className={`group relative block bg-mono-900 rounded-3xl overflow-hidden border border-mono-800 transition-all duration-500 shadow-xl ${
+                isPlayable ? 'hover:border-white hover:shadow-2xl' : 'cursor-default'
+              }`}
+            >
+              {/* IMAGE CONTAINER */}
+              <div className="h-[450px] overflow-hidden relative">
+                <div className="absolute top-6 left-6 z-30">
+                  <span className={`px-4 py-2 rounded-full text-xs font-bold tracking-widest uppercase shadow-lg ${game.statusStyle || statusStyleFor(game.status)}`}>
+                    {game.status}
                   </span>
-                  <h3 className="text-4xl font-black text-white group-hover:underline decoration-2 underline-offset-8 drop-shadow-xl">
-                    {game.title}
-                  </h3>
                 </div>
-                
-                <div className="bg-white text-black p-3 rounded-full opacity-0 transform translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300 shadow-lg">
-                  <ArrowUpRight className="w-6 h-6" />
-                </div>
+
+                <img
+                  src={game.image}
+                  alt={game.title}
+                  loading="lazy"
+                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 grayscale group-hover:grayscale-0"
+                />
+
+                <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors duration-500 z-10" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/80 to-transparent opacity-90 z-20" />
               </div>
-              
-              <p className="text-mono-200 text-lg leading-relaxed max-w-xl drop-shadow-md font-medium">
-                {game.desc}
-              </p>
-            </div>
-          </motion.a>
-        ))}
+
+              {/* TEXT CONTENT */}
+              <div className="absolute bottom-0 left-0 w-full p-8 md:p-10 z-30">
+                <div className="flex justify-between items-end mb-4">
+                  <div>
+                    <span className="text-mono-300 text-sm font-bold tracking-widest uppercase block mb-2 drop-shadow-md">
+                      {game.genre}
+                    </span>
+                    <h3 className={`text-4xl font-black text-white drop-shadow-xl ${isPlayable ? 'group-hover:underline decoration-2 underline-offset-8' : ''}`}>
+                      {game.title}
+                    </h3>
+                  </div>
+
+                  {isPlayable && (
+                    <div className="bg-white text-black p-3 rounded-full opacity-0 transform translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300 shadow-lg">
+                      <ArrowUpRight className="w-6 h-6" />
+                    </div>
+                  )}
+                </div>
+
+                <p className="text-mono-200 text-lg leading-relaxed max-w-xl drop-shadow-md font-medium">
+                  {game.desc}
+                </p>
+              </div>
+            </motion.a>
+          );
+        })}
       </div>
     </div>
   );

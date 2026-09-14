@@ -1,7 +1,18 @@
 import { useState } from 'react';
 import { Outlet, Link, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Menu, X, Twitter, Github, MonitorPlay, Mail } from 'lucide-react';
+import { Menu, X, Twitter, MessageSquare, Youtube, Gamepad2, Mail } from 'lucide-react';
+import { CONTACT_EMAIL, SOCIALS } from '../config/site';
+import CookieConsent from './CookieConsent';
+import { openConsentSettings } from '../lib/consent';
+
+const SOCIAL_ICONS = {
+  twitter: Twitter,
+  discord: MessageSquare,
+  roblox: Gamepad2,
+  youtube: Youtube,
+  github: Gamepad2,
+} as const;
 
 const NAVIGATION = [
   { name: 'HOME', href: '/' },
@@ -25,7 +36,7 @@ export default function Layout() {
           <div className="flex items-center justify-between h-24"> 
             <Link to="/" className="flex items-center cursor-pointer">
               <img 
-                src="./public/images/image_7.png" 
+                src="/images/image_7.png" 
                 alt="Lumenara Logo" 
                 className="h-16 w-auto transition-transform hover:scale-105" 
               />
@@ -43,7 +54,12 @@ export default function Layout() {
               ))}
             </div>
 
-            <button className="md:hidden text-white p-2" onClick={() => setIsMenuOpen(!isMenuOpen)}>
+            <button
+              className="md:hidden text-white p-2"
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
+              aria-expanded={isMenuOpen}
+            >
               {isMenuOpen ? <X className="w-8 h-8" /> : <Menu className="w-8 h-8" />}
             </button>
           </div>
@@ -58,7 +74,12 @@ export default function Layout() {
           >
             <div className="px-4 pt-4 pb-6 space-y-2">
               {NAVIGATION.map((item) => (
-                <Link key={item.name} to={item.href} onClick={() => setIsMenuOpen(false)} className="block py-3 text-lg font-bold text-mono-300 hover:text-white border-b border-mono-800/50">
+                <Link
+                  key={item.name}
+                  to={item.href}
+                  onClick={() => setIsMenuOpen(false)}
+                  className={`block py-3 text-lg font-bold border-b border-mono-800/50 transition-colors ${isActive(item.href) ? 'text-white' : 'text-mono-400 hover:text-white'}`}
+                >
                   {item.name}
                 </Link>
               ))}
@@ -78,30 +99,49 @@ export default function Layout() {
           <div className="flex flex-col md:flex-row justify-between items-center mb-8 gap-6">
             <div className="flex items-center">
               <img 
-                src="./public/images/image_7.png" 
+                src="/images/image_7.png" 
                 alt="Lumenara" 
                 className="h-12 w-auto" 
               />
             </div>
             
+            {/* Показуємо тільки ті соцмережі, у яких реально є посилання (див. config/site.ts) */}
             <div className="flex gap-6">
-              <a href="#" className="text-mono-400 hover:text-white transition-colors"><Twitter className="w-6 h-6" /></a>
-              <a href="#" className="text-mono-400 hover:text-white transition-colors"><Github className="w-6 h-6" /></a>
-              <a href="#" className="text-mono-400 hover:text-white transition-colors"><MonitorPlay className="w-6 h-6" /></a>
-              <a href="mailto:ariel@femy-walsh.com" className="text-mono-400 hover:text-white transition-colors"><Mail className="w-6 h-6" /></a>
+              {SOCIALS.filter((social) => social.href).map((social) => {
+                const Icon = SOCIAL_ICONS[social.id];
+                return (
+                  <a
+                    key={social.id}
+                    href={social.href!}
+                    target="_blank"
+                    rel="noreferrer"
+                    aria-label={social.label}
+                    className="text-mono-400 hover:text-white transition-colors"
+                  >
+                    <Icon className="w-6 h-6" />
+                  </a>
+                );
+              })}
+              <a href={`mailto:${CONTACT_EMAIL}`} aria-label="Email Lumenara" className="text-mono-400 hover:text-white transition-colors">
+                <Mail className="w-6 h-6" />
+              </a>
             </div>
           </div>
 
           <div className="flex flex-wrap justify-center md:justify-start gap-8 text-sm text-mono-500 border-t border-mono-800 pt-8">
-            <span>© 2026 Lumenara. All rights reserved.</span>
+            <span>© {new Date().getFullYear()} Lumenara. All rights reserved.</span>
             <div className="flex gap-6">
               <Link to="/privacy" className="hover:text-white transition-colors">Privacy Policy</Link>
               <Link to="/terms" className="hover:text-white transition-colors">Terms of Service</Link>
               <Link to="/contact" className="hover:text-white transition-colors">Contact</Link>
+              <button onClick={openConsentSettings} className="hover:text-white transition-colors">Cookie Settings</button>
             </div>
           </div>
         </div>
       </footer>
+
+      {/* Банер згоди на cookies (GDPR) */}
+      <CookieConsent />
     </div>
   );
 }

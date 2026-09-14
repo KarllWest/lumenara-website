@@ -1,39 +1,25 @@
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { Users, Trophy, Zap, ChevronRight, BarChart3, ShieldCheck, Heart, ArrowUpRight, Gamepad2 } from 'lucide-react';
+import { useSupabaseList } from '../hooks/useSupabaseList';
+import { STUDIO_STATS } from '../config/site';
+import { statusStyleFor, type Game } from '../types/content';
 
-// 1. ДАНІ ПРО ІГРИ (Ті самі, що і в Games.tsx)
-const PREVIEW_GAMES = [
-  {
-    title: "One of Us",
-    genre: "Sports / Physics",
-    status: "LIVE",
-    statusStyle: "bg-white text-black font-bold border border-white",
-    desc: "One player is secretly the Killer. Blend in or strike when no one expects it.",
-    image: "/images/one-of-us.png", 
-    link: "https://www.roblox.com/games/79436299646095/One-of-Us#!/about" 
-  },
-  {
-    title: "Jujutsu Cursed Genesis",
-    genre: "Sports / Competitive",
-    status: "IN DEV",
-    statusStyle: "bg-black/40 backdrop-blur-md border border-white/20 text-white font-medium",
-    desc: "Fast-paced combat with exaggerated physics. Dominate the arena in this high-fidelity experience.",
-    image: "/images/jcg.png", 
-    link: "#"
-  },
-  {
-    title: "GreyBox",
-    genre: "FPS / Strategy",
-    status: "IN DEV",
-    statusStyle: "bg-black/40 backdrop-blur-md border border-white/20 text-white font-medium",
-    desc: "An upcoming tactical shooter pushing the boundaries of what's possible on the Roblox engine.",
-    image: "/images/greybox.png", 
-    link: "#"
-  }
-];
+const FEATURED_LINK = 'https://www.roblox.com/games/79436299646095/One-of-Us#!/about';
+
+const STAT_ICONS: Record<string, typeof Users> = {
+  visits: Users,
+  peak: Zap,
+  rating: Trophy,
+  community: Heart,
+};
 
 export default function Home() {
+  // Прев'ю тягнемо з тієї ж таблиці, що й сторінка Games,
+  // щоб зміни в адмінці одразу були видні на головній.
+  const { data: games } = useSupabaseList<Game>('games');
+  const previewGames = games.slice(0, 3);
+
   return (
     <div className="overflow-hidden bg-mono-950 text-white selection:bg-white selection:text-black">
       
@@ -63,25 +49,25 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 2. STUDIO METRICS */}
+      {/* 2. STUDIO METRICS — цифри живуть у config/site.ts */}
+      {STUDIO_STATS.length > 0 && (
       <section className="py-12 border-y border-mono-800 bg-mono-900/50 backdrop-blur-sm">
         <div className="max-w-7xl mx-auto px-4 grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-          {[
-            { label: "Total Visits", val: "500M+", icon: <Users className="w-5 h-5 text-white" /> },
-            { label: "Peak Players", val: "125K", icon: <Zap className="w-5 h-5 text-mono-300" /> },
-            { label: "Avg Rating", val: "94%", icon: <Trophy className="w-5 h-5 text-mono-300" /> },
-            { label: "Community", val: "2M+", icon: <Heart className="w-5 h-5 text-white" /> },
-          ].map((stat, idx) => (
-            <div key={idx} className="flex flex-col items-center">
-              <div className="flex items-center gap-2 mb-2 opacity-70">
-                {stat.icon}
-                <span className="text-sm font-bold uppercase tracking-widest text-mono-400">{stat.label}</span>
+          {STUDIO_STATS.map((stat) => {
+            const Icon = STAT_ICONS[stat.id] ?? Trophy;
+            return (
+              <div key={stat.id} className="flex flex-col items-center">
+                <div className="flex items-center gap-2 mb-2 opacity-70">
+                  <Icon className="w-5 h-5 text-white" />
+                  <span className="text-sm font-bold uppercase tracking-widest text-mono-400">{stat.label}</span>
+                </div>
+                <span className="text-4xl md:text-5xl font-black text-white">{stat.value}</span>
               </div>
-              <span className="text-4xl md:text-5xl font-black text-white">{stat.val}</span>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </section>
+      )}
 
       {/* 3. FEATURED GAME (Hero Product) */}
       <section className="py-24 relative">
@@ -100,7 +86,7 @@ export default function Home() {
                   </li>
                 ))}
               </ul>
-              <a href="https://www.roblox.com/games/79436299646095/One-of-Us#!/about" target="_blank" rel="noreferrer" className="flex items-center gap-2 bg-white text-mono-950 px-8 py-3 rounded-lg font-bold hover:bg-mono-200 transition-colors w-fit">
+              <a href={FEATURED_LINK} target="_blank" rel="noreferrer" className="flex items-center gap-2 bg-white text-mono-950 px-8 py-3 rounded-lg font-bold hover:bg-mono-200 transition-colors w-fit">
                 <Gamepad2 className="w-5 h-5" /> Play Now on Roblox
               </a>
             </div>
@@ -116,7 +102,8 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 4. GAME LIBRARY PREVIEW (UPDATED SECTION) */}
+      {/* 4. GAME LIBRARY PREVIEW — ховаємо секцію, поки бібліотека порожня */}
+      {previewGames.length > 0 && (
       <section className="py-24 bg-mono-950 border-t border-mono-900">
         <div className="max-w-7xl mx-auto px-4">
           <div className="flex justify-between items-end mb-12">
@@ -130,10 +117,10 @@ export default function Home() {
           </div>
           
           <div className="grid md:grid-cols-3 gap-6">
-            {PREVIEW_GAMES.map((game, idx) => (
+            {previewGames.map((game) => (
               <motion.a 
-                key={idx}
-                href={game.link}
+                key={game.id}
+                href={game.link && game.link !== '#' ? game.link : undefined}
                 target="_blank"
                 rel="noreferrer"
                 whileHover={{ y: -5 }}
@@ -143,7 +130,7 @@ export default function Home() {
                 <div className="h-56 bg-mono-800 relative overflow-hidden">
                    {/* Status Badge */}
                    <div className="absolute top-4 left-4 z-30">
-                    <span className={`px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider shadow-lg ${game.statusStyle}`}>
+                    <span className={`px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider shadow-lg ${game.statusStyle || statusStyleFor(game.status)}`}>
                       {game.status}
                     </span>
                   </div>
@@ -151,6 +138,7 @@ export default function Home() {
                   <img 
                     src={game.image} 
                     alt={game.title}
+                    loading="lazy"
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 grayscale group-hover:grayscale-0" 
                   />
                   
@@ -178,6 +166,7 @@ export default function Home() {
           </div>
         </div>
       </section>
+      )}
 
       {/* 5. OUR STORY */}
       <section className="py-24 border-t border-mono-900">
