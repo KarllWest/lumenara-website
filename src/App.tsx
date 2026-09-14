@@ -4,6 +4,7 @@ import { MotionConfig } from 'framer-motion';
 import Layout from './components/Layout';
 import Home from './pages/Home';
 import Games from './pages/Games';
+import GameDetail from './pages/GameDetail';
 import Team from './pages/Team';
 import Blog from './pages/Blog';
 import Contact from './pages/Contact';
@@ -29,6 +30,7 @@ function App() {
           <Route path="/" element={<Layout />}>
             <Route index element={<Home />} />
             <Route path="games" element={<Games />} />
+            <Route path="games/:id" element={<GameDetail />} />
             <Route path="team" element={<Team />} />
             <Route path="blog" element={<Blog />} />
             <Route path="contact" element={<Contact />} />

@@ -6,7 +6,7 @@ import { useSupabaseList } from '../../hooks/useSupabaseList';
 
 type GameForm = Omit<Game, 'id' | 'statusStyle'>;
 
-const INITIAL_STATE: GameForm = { title: '', genre: '', status: 'IN DEV', desc: '', image: '', link: '#' };
+const INITIAL_STATE: GameForm = { title: '', genre: '', status: 'IN DEV', desc: '', image: '', link: '#', trailer: '' };
 
 export default function AdminGames() {
   const { data, reload, error: loadError } = useSupabaseList<Game>('games');
@@ -41,6 +41,7 @@ export default function AdminGames() {
       desc: item.desc,
       image: item.image,
       link: item.link,
+      trailer: item.trailer ?? '',
     });
     setEditingId(item.id);
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -88,7 +89,8 @@ export default function AdminGames() {
             <input value={formData.image} onChange={e => setFormData({ ...formData, image: e.target.value })} className={inputClass} placeholder="Image Path (e.g. /images/greybox.png)" />
           </div>
           <textarea value={formData.desc} onChange={e => setFormData({ ...formData, desc: e.target.value })} className={inputClass} rows={3} placeholder="Description" required />
-          <input value={formData.link} onChange={e => setFormData({ ...formData, link: e.target.value })} className={inputClass} placeholder="Link URL (leave # if not released)" />
+          <input value={formData.link} onChange={e => setFormData({ ...formData, link: e.target.value })} className={inputClass} placeholder="Roblox Link (leave # if not released)" />
+          <input value={formData.trailer} onChange={e => setFormData({ ...formData, trailer: e.target.value })} className={inputClass} placeholder="Trailer — YouTube URL (optional)" />
           <button type="submit" disabled={saving} className="bg-white text-black font-bold py-3 rounded-lg hover:bg-mono-200 transition-colors flex justify-center gap-2 disabled:opacity-50">
             <Save className="w-5 h-5" /> {saving ? 'Saving...' : 'Save'}
           </button>

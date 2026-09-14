@@ -55,12 +55,21 @@ public/images/         ← обкладинки ігор і логотип
 
 | Таблиця | Колонки |
 |---|---|
-| `games` | `id`, `title`, `genre`, `status`, `statusStyle`, `desc`, `image`, `link` |
+| `games` | `id`, `title`, `genre`, `status`, `statusStyle`, `desc`, `image`, `link`, `trailer` |
 | `team`  | `id`, `name`, `role`, `bio`, `img` |
 | `blog`  | `id`, `title`, `date`, `cat`, `summary`, `link` |
 
 `statusStyle` заповнюється автоматично з `status` (див. `statusStyleFor` у `types/content.ts`) —
-вручну його вводити не треба.
+вручну його вводити не треба. `trailer` — YouTube-посилання (будь-який формат) для сторінки гри `/games/:id`.
+
+> **Спершу додай колонку `trailer`**, інакше збереження гри в адмінці впаде з помилкою.
+> У Supabase → SQL Editor виконай:
+> ```sql
+> alter table public.games add column if not exists trailer text not null default '';
+> ```
+
+Клік по грі (на сторінці Games чи в прев'ю на головній) веде на `/games/:id` — сторінку
+з описом і вбудованим трейлером; кнопка «Play on Roblox» тепер там, а не на картці.
 
 ### Безпека бази (RLS)
 

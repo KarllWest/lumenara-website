@@ -11,6 +11,8 @@ export interface Game {
   desc: string;
   image: string;
   link: string;
+  /** YouTube-посилання на трейлер (будь-який формат). Порожнє — трейлера немає. */
+  trailer: string;
 }
 
 export interface TeamMember {

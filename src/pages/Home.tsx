@@ -6,6 +6,8 @@ import { STUDIO_STATS } from '../config/site';
 import { statusStyleFor, type Game } from '../types/content';
 import FAQ from '../components/FAQ';
 
+const MotionLink = motion.create(Link);
+
 const FEATURED_LINK = 'https://www.roblox.com/games/79436299646095/One-of-Us#!/about';
 
 const STAT_ICONS: Record<string, typeof Users> = {
@@ -119,11 +121,9 @@ export default function Home() {
           
           <div className="grid md:grid-cols-3 gap-6">
             {previewGames.map((game) => (
-              <motion.a 
+              <MotionLink
                 key={game.id}
-                href={game.link && game.link !== '#' ? game.link : undefined}
-                target="_blank"
-                rel="noreferrer"
+                to={`/games/${game.id}`}
                 whileHover={{ y: -5 }}
                 className="group relative bg-mono-900 rounded-xl overflow-hidden border border-mono-800 hover:border-white transition-colors duration-500 block"
               >
@@ -162,7 +162,7 @@ export default function Home() {
                     View Project <ArrowUpRight className="w-3 h-3" />
                   </div>
                 </div>
-              </motion.a>
+              </MotionLink>
             ))}
           </div>
         </div>

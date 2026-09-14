@@ -1,9 +1,12 @@
 import { useMemo, useState } from 'react';
 import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
 import { ArrowUpRight } from 'lucide-react';
 import { useSupabaseList } from '../hooks/useSupabaseList';
 import ContentState from '../components/ContentState';
 import { statusStyleFor, type Game } from '../types/content';
+
+const MotionLink = motion.create(Link);
 
 type Filter = 'ALL' | 'LIVE' | 'IN DEV';
 const FILTERS: Filter[] = ['ALL', 'LIVE', 'IN DEV'];
@@ -70,21 +73,15 @@ export default function Games() {
       {/* GAMES GRID */}
       <div className="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-2 gap-8">
         {visibleGames.map((game, idx) => {
-          const isPlayable = Boolean(game.link) && game.link !== '#';
-
           return (
-            <motion.a
-              href={isPlayable ? game.link : undefined}
-              target={isPlayable ? '_blank' : undefined}
-              rel="noreferrer"
+            <MotionLink
+              to={`/games/${game.id}`}
               key={game.id}
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: idx * 0.1 }}
-              className={`group relative block bg-mono-900 rounded-3xl overflow-hidden border border-mono-800 transition-all duration-500 shadow-xl ${
-                isPlayable ? 'hover:border-white hover:shadow-2xl' : 'cursor-default'
-              }`}
+              className="group relative block bg-mono-900 rounded-3xl overflow-hidden border border-mono-800 transition-all duration-500 shadow-xl hover:border-white hover:shadow-2xl"
             >
               {/* IMAGE CONTAINER */}
               <div className="h-[450px] overflow-hidden relative">
@@ -112,23 +109,21 @@ export default function Games() {
                     <span className="text-mono-300 text-sm font-bold tracking-widest uppercase block mb-2 drop-shadow-md">
                       {game.genre}
                     </span>
-                    <h3 className={`text-4xl font-black text-white drop-shadow-xl ${isPlayable ? 'group-hover:underline decoration-2 underline-offset-8' : ''}`}>
+                    <h3 className="text-4xl font-black text-white drop-shadow-xl group-hover:underline decoration-2 underline-offset-8">
                       {game.title}
                     </h3>
                   </div>
 
-                  {isPlayable && (
-                    <div className="bg-white text-black p-3 rounded-full opacity-0 transform translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300 shadow-lg">
-                      <ArrowUpRight className="w-6 h-6" />
-                    </div>
-                  )}
+                  <div className="bg-white text-black p-3 rounded-full opacity-0 transform translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300 shadow-lg">
+                    <ArrowUpRight className="w-6 h-6" />
+                  </div>
                 </div>
 
                 <p className="text-mono-200 text-lg leading-relaxed max-w-xl drop-shadow-md font-medium">
                   {game.desc}
                 </p>
               </div>
-            </motion.a>
+            </MotionLink>
           );
         })}
       </div>
