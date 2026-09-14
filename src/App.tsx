@@ -1,5 +1,6 @@
 import { lazy, Suspense } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { MotionConfig } from 'framer-motion';
 import Layout from './components/Layout';
 import Home from './pages/Home';
 import Games from './pages/Games';
@@ -20,6 +21,8 @@ const NotFound = lazy(() => import('./pages/NotFound'));
 function App() {
   return (
     <BrowserRouter>
+      {/* reducedMotion="user" — поважаємо системне налаштування «менше руху» */}
+      <MotionConfig reducedMotion="user">
       <ScrollToTop />
       <Suspense fallback={<PageFallback />}>
         <Routes>
@@ -42,6 +45,7 @@ function App() {
           </Route>
         </Routes>
       </Suspense>
+      </MotionConfig>
     </BrowserRouter>
   );
 }

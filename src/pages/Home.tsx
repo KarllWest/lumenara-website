@@ -4,6 +4,7 @@ import { Users, Trophy, Zap, ChevronRight, BarChart3, ShieldCheck, Heart, ArrowU
 import { useSupabaseList } from '../hooks/useSupabaseList';
 import { STUDIO_STATS } from '../config/site';
 import { statusStyleFor, type Game } from '../types/content';
+import FAQ from '../components/FAQ';
 
 const FEATURED_LINK = 'https://www.roblox.com/games/79436299646095/One-of-Us#!/about';
 
@@ -70,7 +71,7 @@ export default function Home() {
       )}
 
       {/* 3. FEATURED GAME (Hero Product) */}
-      <section className="py-24 relative">
+      <section className="py-24 relative cv-section">
         <div className="max-w-7xl mx-auto px-4">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div className="order-2 lg:order-1">
@@ -104,7 +105,7 @@ export default function Home() {
 
       {/* 4. GAME LIBRARY PREVIEW — ховаємо секцію, поки бібліотека порожня */}
       {previewGames.length > 0 && (
-      <section className="py-24 bg-mono-950 border-t border-mono-900">
+      <section className="py-24 bg-mono-950 border-t border-mono-900 cv-section">
         <div className="max-w-7xl mx-auto px-4">
           <div className="flex justify-between items-end mb-12">
             <div>
@@ -169,7 +170,7 @@ export default function Home() {
       )}
 
       {/* 5. OUR STORY */}
-      <section className="py-24 border-t border-mono-900">
+      <section className="py-24 border-t border-mono-900 cv-section">
         <div className="max-w-4xl mx-auto px-4 text-center">
           <h2 className="text-4xl font-bold text-white mb-8">Crafting Digital Worlds</h2>
           <p className="text-xl text-mono-300 leading-relaxed mb-6">
@@ -181,7 +182,7 @@ export default function Home() {
       </section>
 
       {/* 6. CAPABILITIES */}
-      <section className="py-24 bg-mono-900/30">
+      <section className="py-24 bg-mono-900/30 cv-section">
         <div className="max-w-7xl mx-auto px-4 grid md:grid-cols-3 gap-8">
           <div className="p-8 bg-mono-950 rounded-2xl border border-mono-800">
             <BarChart3 className="w-10 h-10 text-white mb-6" />
@@ -197,6 +198,42 @@ export default function Home() {
             <Users className="w-10 h-10 text-white mb-6" />
             <h3 className="text-xl font-bold text-white mb-3">People, not Robots</h3>
             <p className="text-mono-400">We believe in craftsmanship. Every asset, script, and UI element is handmade with passion and intent.</p>
+          </div>
+        </div>
+      </section>
+
+      {/* 7. FAQ */}
+      <section className="py-24 border-t border-mono-900 cv-section">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="text-center mb-14">
+            <span className="text-white font-bold tracking-widest uppercase mb-2 block text-sm">FAQ</span>
+            <h2 className="text-4xl font-bold text-white">Questions, answered</h2>
+          </div>
+          <FAQ />
+        </div>
+      </section>
+
+      {/* 8. CTA */}
+      <section className="py-24 cv-section">
+        <div className="max-w-5xl mx-auto px-4">
+          <div className="relative overflow-hidden rounded-3xl border border-mono-800 bg-gradient-to-br from-mono-900 to-mono-950 p-10 md:p-16 text-center">
+            <div className="absolute -top-24 -right-24 w-64 h-64 bg-white/5 blur-3xl rounded-full" />
+            <div className="relative">
+              <h2 className="text-4xl md:text-5xl font-black text-white mb-5 tracking-tight">
+                Have a project in mind?
+              </h2>
+              <p className="text-mono-400 text-lg max-w-xl mx-auto mb-9">
+                Whether it's a new experience or a brand collaboration, we'd love to hear about it.
+              </p>
+              <div className="flex flex-col sm:flex-row justify-center gap-4">
+                <Link to="/contact" className="bg-white hover:bg-mono-200 text-mono-950 px-8 py-4 rounded-full font-bold transition-colors">
+                  Start a Conversation
+                </Link>
+                <Link to="/games" className="bg-mono-900 hover:bg-mono-800 text-white px-8 py-4 rounded-full font-bold border border-mono-800 transition-colors">
+                  See Our Work
+                </Link>
+              </div>
+            </div>
           </div>
         </div>
       </section>

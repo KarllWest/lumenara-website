@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { Menu, X, Twitter, MessageSquare, Youtube, Gamepad2, Mail } from 'lucide-react';
 import { CONTACT_EMAIL, SOCIALS } from '../config/site';
 import CookieConsent from './CookieConsent';
+import ScrollProgress from './ScrollProgress';
 import { openConsentSettings } from '../lib/consent';
 
 const SOCIAL_ICONS = {
@@ -29,7 +30,9 @@ export default function Layout() {
 
   return (
     <div className="min-h-screen bg-mono-950 text-mono-300 font-sans selection:bg-mono-100 selection:text-mono-950 flex flex-col">
-      
+
+      <ScrollProgress />
+
       {/* NAVBAR */}
       <nav className="fixed w-full z-50 bg-mono-950/90 backdrop-blur-lg border-b border-mono-800/50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

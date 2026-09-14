@@ -14,3 +14,11 @@ html {
     scroll-behavior: auto;
   }
 }
+
+/* Пропускаємо рендер секцій поза екраном — прибирає ривки при скролі
+   на довгих сторінках. contain-intrinsic-size резервує місце,
+   щоб скролбар не «стрибав». */
+.cv-section {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 600px;
+}

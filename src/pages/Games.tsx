@@ -1,11 +1,24 @@
+import { useMemo, useState } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowUpRight } from 'lucide-react';
 import { useSupabaseList } from '../hooks/useSupabaseList';
 import ContentState from '../components/ContentState';
 import { statusStyleFor, type Game } from '../types/content';
 
+type Filter = 'ALL' | 'LIVE' | 'IN DEV';
+const FILTERS: Filter[] = ['ALL', 'LIVE', 'IN DEV'];
+
 export default function Games() {
   const { data: games, loading, error } = useSupabaseList<Game>('games');
+  const [filter, setFilter] = useState<Filter>('ALL');
+
+  const visibleGames = useMemo(
+    () => (filter === 'ALL' ? games : games.filter((g) => g.status === filter)),
+    [games, filter],
+  );
+
+  // Показуємо фільтр, лише коли справді є з-поміж чого вибирати.
+  const showFilters = games.length > 0 && new Set(games.map((g) => g.status)).size > 1;
 
   return (
     <div className="min-h-screen pb-20 bg-mono-950 text-white selection:bg-white selection:text-black">
@@ -34,9 +47,29 @@ export default function Games() {
         emptyText="No games published yet. Check back soon."
       />
 
+      {/* FILTER TABS */}
+      {showFilters && (
+        <div className="max-w-7xl mx-auto px-4 mb-10 flex flex-wrap gap-2">
+          {FILTERS.map((f) => (
+            <button
+              key={f}
+              onClick={() => setFilter(f)}
+              aria-pressed={filter === f}
+              className={`px-5 py-2 rounded-full text-sm font-bold uppercase tracking-widest transition-colors border ${
+                filter === f
+                  ? 'bg-white text-mono-950 border-white'
+                  : 'bg-transparent text-mono-400 border-mono-800 hover:text-white hover:border-mono-600'
+              }`}
+            >
+              {f}
+            </button>
+          ))}
+        </div>
+      )}
+
       {/* GAMES GRID */}
       <div className="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-2 gap-8">
-        {games.map((game, idx) => {
+        {visibleGames.map((game, idx) => {
           const isPlayable = Boolean(game.link) && game.link !== '#';
 
           return (
